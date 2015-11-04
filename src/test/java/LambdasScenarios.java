@@ -1,10 +1,35 @@
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import java.awt.event.ActionListener;
+import java.util.function.BinaryOperator;
+import java.util.function.LongBinaryOperator;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
 
 public class LambdasScenarios {
+
+    @Test
+    public void shouldShowLambdasExpressionsForms() {
+        final Runnable runnable = () -> System.out.println("Hello TTDay");
+        runnable.run();
+
+        final ActionListener listener = event -> System.out.println("Event!!!");
+        listener.actionPerformed(null);
+
+        final Runnable multiStatement = () -> {
+            System.out.println("Hello");
+            System.out.println("TTDay");
+        };
+        multiStatement.run();
+
+        final BinaryOperator<Integer> add = (a, b) -> a + b;
+        final LongBinaryOperator addLong = (a, b) -> a + b;
+        final int i = add.apply(1, 2);
+        System.out.println("i = " + i);
+        final long j = addLong.applyAsLong(2L, 3L);
+        System.out.println("j = " + j);
+    }
 
     @Test
     public void shouldCalculateTableElementsSumUsingReduce() {
