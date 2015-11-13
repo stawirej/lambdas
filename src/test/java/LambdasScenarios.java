@@ -146,4 +146,15 @@ public class LambdasScenarios {
         // Then
         assertThat(sum).isEqualTo(55);
     }
+
+    @Test
+    public void shouldUseSpecializedStream() {
+        // Given
+        final Set<Integer> collected =
+            IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter(x -> x > 5).boxed().collect(Collectors.toSet());
+
+        // When
+
+        // Then
+    }
 }
