@@ -37,16 +37,31 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void streams() {
+    public void shouldCountImperativeStyle() {
+        // Given
         final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        // int evenCounter = 0;
-        // for (int i = 0; i < table.size(); i++) {
-        // if (table.get(i) % 2 == 0) {
-        // evenCounter++;
-        // }
-        // }
 
+        // When
+        int evenCounter = 0;
+        for (int i = 0; i < table.size(); i++) {
+            if (table.get(i) % 2 == 0) {
+                evenCounter++;
+            }
+        }
+
+        // Then
+        System.out.println("evenCounter = " + evenCounter);
+    }
+
+    @Test
+    public void shouldCountByStreamsDeclarativeStyle() {
+        // Given
+        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // When
         final long evenCounter = table.stream().filter(x -> x % 2 == 0).count();
+
+        // Then
         System.out.println("evenCounter = " + evenCounter);
     }
 
@@ -72,19 +87,6 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldFilter() {
-        // Given
-        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-
-        // When
-        final List<Integer> filtered =
-                table.stream().filter(x -> x % 2 == 0).filter(x -> x % 3 == 0).collect(Collectors.toList());
-
-        // Then
-        System.out.println("filtered = " + filtered);
-    }
-
-    @Test
     public void shouldDoSimpleFiltering() {
         // Given
         final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -95,9 +97,36 @@ public class LambdasScenarios {
     }
 
     @Test
+    public void shouldFilter() {
+        // Given
+        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // When
+        final List<Integer> filtered =
+            table.stream().filter(x -> x % 2 == 0).filter(x -> x % 3 == 0).collect(Collectors.toList());
+
+        // Then
+        System.out.println("filtered = " + filtered);
+    }
+
+    @Test
+    public void shouldFlatMap() {
+        // Given
+        final List<Integer> tableA = Lists.newArrayList(1, 2, 3, 4, 5);
+        final List<Integer> tableB = Lists.newArrayList(6, 7, 8, 9, 10);
+
+        // When
+        final List<Integer> flattened =
+            Stream.of(tableA, tableB).flatMap(table -> table.stream()).collect(Collectors.toList());
+
+        // Then
+        System.out.println("flattened = " + flattened);
+    }
+
+    @Test
     public void shouldCalculateTableElementsSumUsingReduce() {
         // Given
-        final int[] table = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        final int[] table = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         // When
         final int tableSum = IntStream.range(0, table.length).reduce(0, (sum, i) -> sum + table[i]);
@@ -109,7 +138,7 @@ public class LambdasScenarios {
     @Test
     public void shouldUseStreamsToGetTableElementsSum() {
         // Given
-        final int[] table = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        final int[] table = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         // When
         final int sum = IntStream.of(table).sum();
