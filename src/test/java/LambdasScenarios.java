@@ -2,7 +2,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BinaryOperator;
@@ -219,5 +221,33 @@ public class LambdasScenarios {
         // Then
         System.out.println("set = " + set);
         System.out.println("supplier = " + set.getClass());
+    }
+
+    @Test
+    public void shouldCollectSingleValues() {
+        // Given
+        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // When
+        final Double average = table.stream().collect(Collectors.averagingInt(Integer::intValue));
+        System.out.println("average = " + average);
+
+        final IntSummaryStatistics statistics = table.stream().collect(Collectors.summarizingInt(value -> value.intValue()));
+        System.out.println("sum = " + statistics.getSum());
+
+        final Optional<Integer> max = table.stream().collect(Collectors.maxBy(Integer::compareTo));
+        System.out.println("max = " + max.get());
+
+        final long count = table.stream().count();
+        System.out.println("count = " + count);
+    }
+
+    @Test
+    public void shouldPartition() {
+        // Given
+
+        // When
+
+        // Then
     }
 }
