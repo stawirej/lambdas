@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -245,9 +246,27 @@ public class LambdasScenarios {
     @Test
     public void shouldPartition() {
         // Given
+        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         // When
+        final Map<Boolean, List<Integer>> partitioned = table.stream().collect(Collectors.partitioningBy(x -> x % 2 == 0));
 
         // Then
+        System.out.println("partitioned = " + partitioned);
+    }
+
+    @Test
+    public void shouldGroup() {
+        // Given
+        final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
+            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+
+        // When
+        final Map<String, List<Album>> albumsByMusicians =
+            albums.stream().collect(Collectors.groupingBy(album -> album.getMusician()));
+
+        // Then
+        System.out.println("albumsByMusicians = " + albumsByMusicians);
+        System.out.println("albumsByMusicians.get(\"Vader\") = " + albumsByMusicians.get("Vader"));
     }
 }
