@@ -112,7 +112,7 @@ public class LambdasScenarios {
 
         // When
         final List<Integer> filtered =
-                table.stream().filter(x -> x % 2 == 0).filter(x -> x % 3 == 0).collect(Collectors.toList());
+            table.stream().filter(x -> x % 2 == 0).filter(x -> x % 3 == 0).collect(Collectors.toList());
 
         // Then
         System.out.println("filtered = " + filtered);
@@ -126,7 +126,7 @@ public class LambdasScenarios {
 
         // When
         final List<Integer> flattened =
-                Stream.of(tableA, tableB).flatMap(table -> table.stream()).collect(Collectors.toList());
+            Stream.of(tableA, tableB).flatMap(table -> table.stream()).collect(Collectors.toList());
 
         // Then
         System.out.println("flattened = " + flattened);
@@ -160,7 +160,7 @@ public class LambdasScenarios {
     public void shouldUseSpecializedStream() {
         // Given
         final Set<Integer> collected =
-                IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter(x -> x > 5).boxed().collect(Collectors.toSet());
+            IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter(x -> x > 5).boxed().collect(Collectors.toSet());
     }
 
     @Test
@@ -259,11 +259,11 @@ public class LambdasScenarios {
     public void shouldGroup() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
         final Map<String, List<Album>> albumsByMusicians =
-                albums.stream().collect(Collectors.groupingBy(album -> album.getMusician()));
+            albums.stream().collect(Collectors.groupingBy(album -> album.getMusician()));
 
         // Then
         System.out.println("albumsByMusicians = " + albumsByMusicians);
@@ -274,7 +274,7 @@ public class LambdasScenarios {
     public void shouldConcatenateString() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         final StringBuilder builder = new StringBuilder("[");
         // When
@@ -295,13 +295,27 @@ public class LambdasScenarios {
     public void shouldGroupString() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
         final String musicians =
-                albums.stream().map(album -> album.getMusician()).distinct().collect(Collectors.joining(",", "[", "]"));
+            albums.stream().map(album -> album.getMusician()).distinct().collect(Collectors.joining(",", "[", "]"));
 
         // Then
         System.out.println("musicians = " + musicians);
+    }
+
+    @Test
+    public void shouldComposeCollectors() {
+        // Given
+        final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
+            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+
+        // When
+        final Map<String, List<String>> albumsByMusician = albums.stream().collect(Collectors
+            .groupingBy(album -> album.getMusician(), Collectors.mapping(album -> album.getTitle(), Collectors.toList())));
+
+        // Then
+        System.out.println("albumsByMusician = " + albumsByMusician);
     }
 }
