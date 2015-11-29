@@ -3,6 +3,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.IntSummaryStatistics;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -317,5 +318,48 @@ public class LambdasScenarios {
 
         // Then
         System.out.println("albumsByMusician = " + albumsByMusician);
+    }
+
+    @Test
+    public void shouldParrallelData() {
+        // Given
+        final List<Integer> numbers = IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toList());
+
+        // When
+        final long startTime = System.currentTimeMillis();
+
+        final int sum = numbers.parallelStream().mapToInt(value -> value).sum();
+
+        final long stopTime = System.currentTimeMillis();
+        final long elapsedTime = stopTime - startTime;
+        System.out.println("elapsedTime = " + elapsedTime + " ms");
+
+        // Then
+        System.out.println("sum = " + sum);
+    }
+
+    @Test
+    public void shouldParrallelDataDifferentImplementations() {
+        // Given
+        // final List<Integer> numbers =
+        // IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(ArrayList::new));
+
+        // final TreeSet<Integer> numbers =
+        // IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(TreeSet::new));
+
+        final LinkedList<Integer> numbers =
+            IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(LinkedList::new));
+
+        // When
+        final long startTime = System.currentTimeMillis();
+
+        final int sum = numbers.parallelStream().mapToInt(value -> value).sum();
+
+        final long stopTime = System.currentTimeMillis();
+        final long elapsedTime = stopTime - startTime;
+        System.out.println("elapsedTime = " + elapsedTime + " ms");
+
+        // Then
+        System.out.println("sum = " + sum);
     }
 }
