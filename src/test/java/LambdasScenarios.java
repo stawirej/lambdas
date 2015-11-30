@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 import org.fest.util.Lists;
 import org.junit.Test;
 
+import com.google.common.base.Stopwatch;
+
 public class LambdasScenarios {
 
     private static boolean isEven(final int number) {
@@ -323,16 +325,15 @@ public class LambdasScenarios {
     @Test
     public void shouldParrallelData() {
         // Given
-        final List<Integer> numbers = IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toList());
+        final List<Integer> numbers = IntStream.rangeClosed(0, 100_000_000).boxed().collect(Collectors.toList());
 
         // When
-        final long startTime = System.currentTimeMillis();
+        final Stopwatch timer = Stopwatch.createStarted();
 
-        final int sum = numbers.parallelStream().mapToInt(value -> value).sum();
+        final int sum = numbers.stream().mapToInt(value -> value).sum();
 
-        final long stopTime = System.currentTimeMillis();
-        final long elapsedTime = stopTime - startTime;
-        System.out.println("elapsedTime = " + elapsedTime + " ms");
+        timer.stop();
+        System.out.println("timer = " + timer);
 
         // Then
         System.out.println("sum = " + sum);
@@ -351,13 +352,12 @@ public class LambdasScenarios {
             IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(LinkedList::new));
 
         // When
-        final long startTime = System.currentTimeMillis();
+        final Stopwatch timer = Stopwatch.createStarted();
 
         final int sum = numbers.parallelStream().mapToInt(value -> value).sum();
 
-        final long stopTime = System.currentTimeMillis();
-        final long elapsedTime = stopTime - startTime;
-        System.out.println("elapsedTime = " + elapsedTime + " ms");
+        timer.stop();
+        System.out.println("timer = " + timer);
 
         // Then
         System.out.println("sum = " + sum);
