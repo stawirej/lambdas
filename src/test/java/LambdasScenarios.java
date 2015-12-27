@@ -1,6 +1,9 @@
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.IntSummaryStatistics;
 import java.util.LinkedList;
@@ -92,7 +95,7 @@ public class LambdasScenarios {
         final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         // When
-        final List<Integer> mapped = table.stream().map(x -> x * 10).collect(Collectors.toList());
+        final List<Integer> mapped = table.stream().map(x -> x * 10).collect(toList());
 
         // Then
         System.out.println("mapped = " + mapped);
@@ -114,8 +117,7 @@ public class LambdasScenarios {
         final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         // When
-        final List<Integer> filtered =
-            table.stream().filter(x -> x % 2 == 0).filter(x -> x % 3 == 0).collect(Collectors.toList());
+        final List<Integer> filtered = table.stream().filter(x -> x % 2 == 0).filter(x -> x % 3 == 0).collect(toList());
 
         // Then
         System.out.println("filtered = " + filtered);
@@ -128,8 +130,7 @@ public class LambdasScenarios {
         final List<Integer> tableB = Lists.newArrayList(6, 7, 8, 9, 10);
 
         // When
-        final List<Integer> flattened =
-            Stream.of(tableA, tableB).flatMap(table -> table.stream()).collect(Collectors.toList());
+        final List<Integer> flattened = Stream.of(tableA, tableB).flatMap(table -> table.stream()).collect(toList());
 
         // Then
         System.out.println("flattened = " + flattened);
@@ -141,10 +142,10 @@ public class LambdasScenarios {
         final int[] table = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         // When
-        final int tableSum = IntStream.range(0, table.length).reduce(0, (sum, i) -> sum + table[i]);
+        final int sum = Arrays.stream(table).reduce(0, (accumulator, element) -> accumulator + element);
 
         // Then
-        assertThat(tableSum).isEqualTo(55);
+        assertThat(sum).isEqualTo(55);
     }
 
     @Test
@@ -173,10 +174,10 @@ public class LambdasScenarios {
         final List<Person> people = Lists.newArrayList(new Person("Brandon"), new Person("Jessica"), new Person("Marry"));
 
         // When
-        final List<String> names = people.stream().map(Person::getName).collect(Collectors.toList());
+        final List<String> names = people.stream().map(Person::getName).collect(toList());
         System.out.println("names = " + names);
 
-        final List<Integer> collect = table.stream().filter(LambdasScenarios::isEven).collect(Collectors.toList());
+        final List<Integer> collect = table.stream().filter(LambdasScenarios::isEven).collect(toList());
         System.out.println("collect = " + collect);
 
         table.stream().reduce(0, (acc, element) -> acc += element).intValue();
@@ -265,8 +266,7 @@ public class LambdasScenarios {
             new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
-        final Map<String, List<Album>> albumsByMusicians =
-            albums.stream().collect(Collectors.groupingBy(album -> album.getMusician()));
+        final Map<String, List<Album>> albumsByMusicians = albums.stream().collect(groupingBy(album -> album.getMusician()));
 
         // Then
         System.out.println("albumsByMusicians = " + albumsByMusicians);
@@ -315,8 +315,8 @@ public class LambdasScenarios {
             new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
-        final Map<String, List<String>> albumsByMusician = albums.stream().collect(Collectors
-            .groupingBy(album -> album.getMusician(), Collectors.mapping(album -> album.getTitle(), Collectors.toList())));
+        final Map<String, List<String>> albumsByMusician = albums.stream()
+            .collect(groupingBy(album -> album.getMusician(), Collectors.mapping(album -> album.getTitle(), toList())));
 
         // Then
         System.out.println("albumsByMusician = " + albumsByMusician);
@@ -325,7 +325,7 @@ public class LambdasScenarios {
     @Test
     public void shouldParrallelData() {
         // Given
-        final List<Integer> numbers = IntStream.rangeClosed(0, 100_000_000).boxed().collect(Collectors.toList());
+        final List<Integer> numbers = IntStream.rangeClosed(0, 100_000_000).boxed().collect(toList());
 
         // When
         final Stopwatch timer = Stopwatch.createStarted();
@@ -361,5 +361,88 @@ public class LambdasScenarios {
 
         // Then
         System.out.println("sum = " + sum);
+    }
+
+    @Test
+    public void shouldOneCollectionBasedOnSecondCollection() {
+        // Given
+        final Collection<String> firstCollection = Lists.newArrayList("a", "b", "c", "d");
+        final Collection<String> secondCollection = Lists.newArrayList("a", "b", "x", "y");
+
+        // When
+        final List<String> collect = firstCollection.stream().filter(secondCollection::contains).collect(toList());
+
+        // Then
+        assertThat(collect).containsExactly("a", "b");
+    }
+
+    @Test
+    public void shouldFilterOneCollectionBasedOnSecondCollectionByCheckingOneAttribute() {
+        // Given
+        final Collection<Association> associations =
+            Lists.newArrayList(new Association("A"), new Association("B"), new Association("C"), new Association("D"));
+
+        final Collection<Association> associationsToFilter =
+            Lists.newArrayList(new Association("A"), new Association("B"), new Association("X"), new Association("Y"));
+
+        // When
+        final List<String> typesToFilter = associationsToFilter.parallelStream().map(Association::getType).collect(toList());
+        final List<Association> filteredAssociations =
+            associations.parallelStream().filter(a -> typesToFilter.contains(a.getType())).collect(toList());
+
+        // Then
+        assertThat(filteredAssociations).containsExactly(new Association("A"), new Association("B"));
+    }
+
+    @Test
+    public void shouldCheckPerformanceOfFilterOneCollectionBasedOnSecondCollectionByCheckingOneAttribute() {
+        // Given
+        System.out.println("prepare 1");
+        final Collection<Association> associations = createAssociations(100_000);
+        // final Collection<Association> associations =
+        // Lists.newArrayList(new Association("A"), new Association("B"), new Association("C"), new Association("D"));
+
+        System.out.println("prepare 2");
+        final Collection<Association> inAssociations = createAssociations(100_000);
+        // final Collection<Association> inAssociations =
+        // Lists.newArrayList(new Association("A"), new Association("B"), new Association("X"), new Association("Y"));
+
+        System.out.println("start");
+        final long startTime = System.currentTimeMillis();
+
+        // original - slowest
+        // final Collection<Association> assocs = Lists.newArrayList();
+        // for (final Association association : inAssociations) {
+        // associations.stream().filter(a -> a.isTypeOf(association)).forEach(t -> assocs.add(t));
+        // }
+        //
+
+        // System.out.println("old assocs = " + assocs);
+
+        // When
+
+        // ok - medium
+        // final List<Association> collect =
+        // associations.stream().filter(a -> inAssociations.stream().anyMatch(ia -> ia.isTypeOf(a))).collect(toList());
+
+        // ok2 - fastest
+        // final List<String> types = inAssociations.parallelStream().map(Association::getType).collect(toList());
+        // final List<Association> collect =
+        // associations.parallelStream().filter(a -> types.contains(a.getType())).collect(toList());
+
+        final long stopTime = System.currentTimeMillis();
+        final long elapsedTime = stopTime - startTime;
+        System.out.println("elapsedTime = " + elapsedTime + " ms");
+
+        // Then
+        // System.out.println("collect = " + collect);
+    }
+
+    private List<Association> createAssociations(final long count) {
+        final List<Association> associations = Lists.newArrayList();
+        for (int i = 0; i < count; i++) {
+            associations.add(new Association(Integer.toString(i + 1)));
+        }
+        return associations;
     }
 }
