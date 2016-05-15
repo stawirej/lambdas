@@ -237,7 +237,7 @@ public class LambdasTalentRoadScenarios {
     }
 
     @Test
-    public void shouldSplitOnNumbersDividedBy2AndRest() {
+    public void shouldSplitOnEvenNumbers() {
         // Given
         final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
@@ -256,11 +256,12 @@ public class LambdasTalentRoadScenarios {
             new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
-        final Map<String, List<String>> albumsByMusician = null;
+        final Map<String, List<String>> albumsByMusicians = null;
+
         // Then
-        then(albumsByMusician.get("Hunter")).contains("Kingdom");
-        then(albumsByMusician.get("Vader")).contains("Sothis", "De Profundis");
-        then(albumsByMusician.get("Michael Jackson")).contains("Dangerous");
+        then(albumsByMusicians.get("Hunter")).contains("Kingdom");
+        then(albumsByMusicians.get("Vader")).contains("Sothis", "De Profundis");
+        then(albumsByMusicians.get("Michael Jackson")).contains("Dangerous");
     }
 
     @Test
