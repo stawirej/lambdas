@@ -45,8 +45,6 @@ public class LambdasTalentRoadScenarios {
      */
     @Test
     public void shouldCountByStreamsDeclarativeStyle() {
-        // Given
-        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         // When
         final long evenCounter = 0;
