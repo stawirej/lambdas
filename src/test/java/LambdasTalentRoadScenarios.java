@@ -54,10 +54,13 @@ public class LambdasTalentRoadScenarios {
 
     }
 
+    /**
+     * HINT: When Given sections contains collection in comment you have to generate required range using streams.
+     */
     @Test
     public void shouldCollectToSet() {
         // Given
-        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
         // When
         final Set<Integer> set = null;
@@ -96,7 +99,7 @@ public class LambdasTalentRoadScenarios {
     @Test
     public void shouldFilterValuesDividedBy2And3() {
         // Given
-        final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
         // When
         final List<Integer> filtered = null;
@@ -199,7 +202,7 @@ public class LambdasTalentRoadScenarios {
     @Test
     public void shouldPickCustomTreeSetCollector() {
         // Given
-        final List<Integer> numbers = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
         // When
         final Collection<Integer> set = null;
