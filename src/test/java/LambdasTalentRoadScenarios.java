@@ -264,7 +264,7 @@ public class LambdasTalentRoadScenarios {
     }
 
     @Test
-    public void shouldGroupString() {
+    public void shouldJoinArtistsIntoOneString() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
             new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
