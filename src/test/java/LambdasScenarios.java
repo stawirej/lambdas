@@ -1,6 +1,6 @@
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.fest.util.Lists;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import com.google.common.base.Stopwatch;
@@ -145,7 +145,7 @@ public class LambdasScenarios {
         final int sum = Arrays.stream(table).reduce(0, (accumulator, element) -> accumulator + element);
 
         // Then
-        assertThat(sum).isEqualTo(55);
+        then(sum).isEqualTo(55);
     }
 
     @Test
@@ -157,7 +157,7 @@ public class LambdasScenarios {
         final int sum = IntStream.of(table).sum();
 
         // Then
-        assertThat(sum).isEqualTo(55);
+        then(sum).isEqualTo(55);
     }
 
     @Test
@@ -373,7 +373,7 @@ public class LambdasScenarios {
         final List<String> collect = firstCollection.stream().filter(secondCollection::contains).collect(toList());
 
         // Then
-        assertThat(collect).containsExactly("a", "b");
+        then(collect).containsExactly("a", "b");
     }
 
     @Test
@@ -391,7 +391,7 @@ public class LambdasScenarios {
             associations.parallelStream().filter(a -> typesToFilter.contains(a.getType())).collect(toList());
 
         // Then
-        assertThat(filteredAssociations).containsExactly(new Association("A"), new Association("B"));
+        then(filteredAssociations).containsExactly(new Association("A"), new Association("B"));
     }
 
     @Test
