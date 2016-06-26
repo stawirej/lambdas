@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 
 public class LambdasScenarios {
 
@@ -395,6 +395,25 @@ public class LambdasScenarios {
     }
 
     @Test
+    public void shouldGenerateSequence() {
+        // Given
+        final int N = 16;
+
+        // When
+        final List<Integer> sequence = Stream.iterate(1, i -> i + 1).filter(this::notDivisibleBy3)
+            .filter(this::notDivisibleBy5).filter(this::notContainingDigit3).limit(N).collect(Collectors.toList());
+
+        // Then
+        then(sequence).containsSequence(1, 2, 4, 7, 8, 11, 14, 16, 17, 19, 22, 26, 28, 29, 41, 44);
+    }
+
+    @Test
+    public void shouldPeek() {
+        // When
+        IntStream.range(1, 15).peek(System.out::println).limit(5).count();
+    }
+
+    @Test
     public void shouldCheckPerformanceOfFilterOneCollectionBasedOnSecondCollectionByCheckingOneAttribute() {
         // Given
         System.out.println("prepare 1");
@@ -444,5 +463,17 @@ public class LambdasScenarios {
             associations.add(new Association(Integer.toString(i + 1)));
         }
         return associations;
+    }
+
+    private boolean notDivisibleBy3(final Integer value) {
+        return value % 3 != 0;
+    }
+
+    private boolean notDivisibleBy5(final Integer value) {
+        return value % 5 != 0;
+    }
+
+    private boolean notContainingDigit3(final Integer value) {
+        return !String.valueOf(value).contains("3");
     }
 }
