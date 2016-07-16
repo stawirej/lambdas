@@ -148,6 +148,29 @@ public class LambdasScenarios {
         then(sum).isEqualTo(55);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void shouldFailWhenConcatenateStringWithReduceWithNullAccumulator() {
+        // Given
+        final String message = null;
+        final List<String> words = Arrays.asList("Ala", " ma", " kota.");
+
+        // When
+        final String sentence = words.stream().reduce(message, String::concat);
+    }
+
+    @Test
+    public void shouldConcatenateStringWithReduce() {
+        // Given
+        final String message = "";
+        final List<String> words = Arrays.asList("Ala", " ma", " kota.");
+
+        // When
+        final String sentence = words.stream().reduce(message, String::concat);
+
+        //Then
+        then(sentence).isEqualTo("Ala ma kota.");
+    }
+
     @Test
     public void shouldUseStreamsToGetTableElementsSum() {
         // Given
