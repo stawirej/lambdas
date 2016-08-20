@@ -3,10 +3,10 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.IntSummaryStatistics;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 
 public class LambdasScenarios {
@@ -348,15 +347,15 @@ public class LambdasScenarios {
     @Test
     public void shouldParrallelData() {
         // Given
-        final List<Integer> numbers = IntStream.rangeClosed(0, 100_000_000).boxed().collect(toList());
+        final List<Integer> numbers = IntStream.rangeClosed(0, 10_000_000).boxed().collect(toList());
 
         // When
-        final Stopwatch timer = Stopwatch.createStarted();
+        final long startTime = System.currentTimeMillis();
 
         final int sum = numbers.stream().mapToInt(value -> value).sum();
 
-        timer.stop();
-        System.out.println("timer = " + timer);
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Computation time = " + (endTime - startTime) + " ms");
 
         // Then
         System.out.println("sum = " + sum);
@@ -365,22 +364,22 @@ public class LambdasScenarios {
     @Test
     public void shouldParrallelDataDifferentImplementations() {
         // Given
-        // final List<Integer> numbers =
-        // IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(ArrayList::new));
+        final List<Integer> numbers =
+            IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(ArrayList::new));
 
         // final TreeSet<Integer> numbers =
         // IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(TreeSet::new));
 
-        final LinkedList<Integer> numbers =
-            IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(LinkedList::new));
+        // final LinkedList<Integer> numbers =
+        // IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(LinkedList::new));
 
         // When
-        final Stopwatch timer = Stopwatch.createStarted();
+        final long startTime = System.currentTimeMillis();
 
         final int sum = numbers.parallelStream().mapToInt(value -> value).sum();
 
-        timer.stop();
-        System.out.println("timer = " + timer);
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Computation time = " + (endTime - startTime) + " ms");
 
         // Then
         System.out.println("sum = " + sum);
@@ -410,8 +409,11 @@ public class LambdasScenarios {
 
         // When
         final List<String> typesToFilter = associationsToFilter.parallelStream().map(Association::getType).collect(toList());
-        final List<Association> filteredAssociations =
-            associations.parallelStream().filter(a -> typesToFilter.contains(a.getType())).collect(toList());
+
+        final List<Association> filteredAssociations = //
+            associations.parallelStream() //
+                .filter(a -> typesToFilter.contains(a.getType())) //
+                .collect(toList());
 
         // Then
         then(filteredAssociations).containsExactly(new Association("A"), new Association("B"));
@@ -423,8 +425,14 @@ public class LambdasScenarios {
         final int N = 16;
 
         // When
-        final List<Integer> sequence = Stream.iterate(1, i -> i + 1).filter(this::notDivisibleBy3)
-            .filter(this::notDivisibleBy5).filter(this::notContainingDigit3).limit(N).collect(Collectors.toList());
+        final List<Integer> sequence = //
+            Stream //
+                .iterate(1, i -> i + 1) //
+                .filter(this::notDivisibleBy3) //
+                .filter(this::notDivisibleBy5) //
+                .filter(this::notContainingDigit3) //
+                .limit(N) //
+                .collect(Collectors.toList());
 
         // Then
         then(sequence).containsSequence(1, 2, 4, 7, 8, 11, 14, 16, 17, 19, 22, 26, 28, 29, 41, 44);
@@ -472,9 +480,8 @@ public class LambdasScenarios {
         // final List<Association> collect =
         // associations.parallelStream().filter(a -> types.contains(a.getType())).collect(toList());
 
-        final long stopTime = System.currentTimeMillis();
-        final long elapsedTime = stopTime - startTime;
-        System.out.println("elapsedTime = " + elapsedTime + " ms");
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Computation time = " + (endTime - startTime) + " ms");
 
         // Then
         // System.out.println("collect = " + collect);
