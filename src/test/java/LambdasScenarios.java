@@ -166,7 +166,7 @@ public class LambdasScenarios {
         // When
         final String sentence = words.stream().reduce(message, String::concat);
 
-        //Then
+        // Then
         then(sentence).isEqualTo("Ala ma kota.");
     }
 
