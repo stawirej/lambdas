@@ -1,5 +1,6 @@
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.awt.event.ActionListener;
@@ -267,6 +268,22 @@ public class LambdasScenarios {
 
         final long count = table.stream().count();
         System.out.println("count = " + count);
+    }
+
+    @Test
+    public void shouldCollectToMap(){
+        //Given
+        final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
+                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"), new Album("Vader", "Tibi Et Igni"));
+
+        //When
+        final Map<String, String> artistsToTitles = albums //
+                .stream() //
+                .collect(toMap(Album::getMusician, Album::getTitle, (albumTitle1, albumTitle2) -> albumTitle1));
+
+        //Then
+        then(artistsToTitles).containsKeys("Vader", "Hunter", "Michael Jackson");
+        then(artistsToTitles).containsValues("De Profundis", "Kingdom", "Dangerous");
     }
 
     @Test
