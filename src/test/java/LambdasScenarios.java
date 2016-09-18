@@ -1,4 +1,5 @@
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -18,6 +19,7 @@ import java.util.function.LongBinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.junit.Test;
 
@@ -81,6 +83,21 @@ public class LambdasScenarios {
     }
 
     @Test
+    public void shouldCreateStreamFromIterable(){
+        //Given
+        Iterable<String> names = Lists.newArrayList("Ala", "Ola", "Piotr", "Dominik");
+
+        //When
+        ArrayList<String> sortedNames = StreamSupport
+                .stream(names.spliterator(), false)
+                .sorted()
+                .collect(toCollection(ArrayList::new));
+
+        //Then
+        then(sortedNames).containsSequence("Ala", "Dominik", "Ola", "Piotr");
+    }
+
+    @Test
     public void shouldCollect() {
         // When
         final Set<Integer> table = Stream.of(1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 9, 10).collect(Collectors.toSet());
@@ -134,6 +151,22 @@ public class LambdasScenarios {
 
         // Then
         System.out.println("flattened = " + flattened);
+    }
+
+    @Test
+    public void shouldCollectToMap(){
+        //Given
+        final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
+                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"), new Album("Vader", "Tibi Et Igni"));
+
+        //When
+        final Map<String, String> artistsToTitles = albums //
+                .stream() //
+                .collect(toMap(Album::getMusician, Album::getTitle, (albumTitle1, albumTitle2) -> albumTitle1));
+
+        //Then
+        then(artistsToTitles).containsKeys("Vader", "Hunter", "Michael Jackson");
+        then(artistsToTitles).containsValues("De Profundis", "Kingdom", "Dangerous");
     }
 
     @Test
@@ -268,22 +301,6 @@ public class LambdasScenarios {
 
         final long count = table.stream().count();
         System.out.println("count = " + count);
-    }
-
-    @Test
-    public void shouldCollectToMap(){
-        //Given
-        final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"), new Album("Vader", "Tibi Et Igni"));
-
-        //When
-        final Map<String, String> artistsToTitles = albums //
-                .stream() //
-                .collect(toMap(Album::getMusician, Album::getTitle, (albumTitle1, albumTitle2) -> albumTitle1));
-
-        //Then
-        then(artistsToTitles).containsKeys("Vader", "Hunter", "Michael Jackson");
-        then(artistsToTitles).containsValues("De Profundis", "Kingdom", "Dangerous");
     }
 
     @Test
