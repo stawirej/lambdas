@@ -2,6 +2,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.awt.event.ActionListener;
@@ -21,6 +22,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import com.google.common.collect.Sets;
+import javafx.util.Pair;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -420,6 +423,55 @@ public class LambdasScenarios {
     }
 
     @Test
+    public void shouldFlatRecursiveStreams(){
+        //Given
+//        http://www.nurkiewicz.com/2014/07/turning-recursive-file-system-traversal.html#!/2014/07/turning-recursive-file-system-traversal.html
+
+        //When
+//        return Stream.concat(Stream.of(this), this.getSubActions().stream().flatMap(CascadedActionInfo::flattened));
+
+        //Then
+    }
+
+    @Test
+    public void shouldSelectIdsBaseOnFirstValueCountAndSecondValueDifference(){
+        //Given
+        List<Pair<Integer, Integer>> pairs = Lists.newArrayList(
+                new Pair<>(1, 11),
+                new Pair<>(1, 12),
+                new Pair<>(1, 13),
+                new Pair<>(2, 21),
+                new Pair<>(2, 22),
+                new Pair<>(3, 31),
+                new Pair<>(3, 31),
+                new Pair<>(4, 41),
+                new Pair<>(4, 42)
+        );
+
+        Set<Integer> expected = Sets.newHashSet(2, 4);
+
+        //When
+        Map<Integer, List<Pair<Integer, Integer>>> grouped = pairs
+                .stream()
+                .collect(groupingBy(Pair::getKey));
+
+        Set<Integer> result = grouped
+                .entrySet()
+                .stream()
+                .filter(this::has2Keys)
+                .map(Map.Entry::getValue)
+                .filter(this::hasDifferentValues)
+                .flatMap(Collection::stream)
+                .map(Pair::getKey)
+                .collect(toSet());
+
+        //Then
+        then(result)
+                .hasSize(expected.size())
+                .containsAll(expected);
+    }
+
+    @Test
     public void shouldOneCollectionBasedOnSecondCollection() {
         // Given
         final Collection<String> firstCollection = Lists.newArrayList("a", "b", "c", "d");
@@ -539,5 +591,14 @@ public class LambdasScenarios {
 
     private boolean notContainingDigit3(final Integer value) {
         return !String.valueOf(value).contains("3");
+    }
+
+
+    private boolean has2Keys(final Map.Entry<Integer, List<Pair<Integer, Integer>>> entry) {
+        return entry.getValue().size() == 2;
+    }
+
+    private boolean hasDifferentValues(final List<Pair<Integer, Integer>> pairs) {
+        return  !pairs.get(0).getValue().equals(pairs.get(1).getValue());
     }
 }
