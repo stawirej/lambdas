@@ -201,8 +201,11 @@ public class LambdasTalentRoadSolvedScenarios {
     @Test
     public void shouldGetNamesUsingMethodReference() {
         // Given
-        final List<Person> people = Lists.newArrayList(new Person("Brandon"),
-            new Person("Jessica"), new Person("Marry"));
+        final List<Person> people = Lists.newArrayList(
+                new Person(1, "Brandon", 11),
+                new Person(2, "Jessica", 22),
+                new Person(3, "Marry", 33)
+        );
 
         // When
         final List<String> names =

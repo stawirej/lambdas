@@ -230,7 +230,11 @@ public class LambdasScenarios {
     public void shouldUseMethodReference() {
         // Given
         final List<Integer> table = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        final List<Person> people = Lists.newArrayList(new Person("Brandon"), new Person("Jessica"), new Person("Marry"));
+        final List<Person> people = Lists.newArrayList(
+                new Person(1, "Brandon", 11),
+                new Person(2, "Jessica", 22),
+                new Person(3, "Marry", 33)
+        );
 
         // When
         final List<String> names = people.stream().map(Person::getName).collect(toList());
@@ -382,7 +386,7 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldParrallelData() {
+    public void shouldParallelData() {
         // Given
         final List<Integer> numbers = IntStream.rangeClosed(0, 10_000_000).boxed().collect(toList());
 
