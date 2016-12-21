@@ -28,7 +28,7 @@ public class CustomCollectorScenarios {
                 new Person(3, "Marry", 33)
         );
 
-        final Collector<String, List<String>, String> toNameCollector = new Collector<>() {
+        final Collector<String, List<String>, String> toNameCollector = new Collector<String, List<String>, String>() {
 
             @Override
             public Supplier<List<String>> supplier() {
