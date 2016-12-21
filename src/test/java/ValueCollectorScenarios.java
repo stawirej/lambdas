@@ -17,56 +17,7 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-public class CustomCollectorScenarios {
-
-    @Test
-    public void shouldGroupWithCustomStringCollector(){
-        // Given
-        final List<Person> people = Lists.newArrayList(
-                new Person(1, "Brandon", 11),
-                new Person(2, "Jessica", 22),
-                new Person(3, "Marry", 33)
-        );
-
-        final Collector<String, List<String>, String> toNameCollector = new Collector<String, List<String>, String>() {
-
-            @Override
-            public Supplier<List<String>> supplier() {
-                return ArrayList::new;
-            }
-
-            @Override
-            public BiConsumer<List<String>, String> accumulator() {
-                return List::add;
-            }
-
-            @Override
-            public BinaryOperator<List<String>> combiner() {
-                return null;
-            }
-
-            @Override
-            public Function<List<String>, String> finisher() {
-                return accumulator -> accumulator.stream().reduce((acc, element) -> element).get();
-            }
-
-            @Override
-            public Set<Characteristics> characteristics() {
-                return Collections.emptySet();
-            }
-        };
-
-        // When
-        Map<Integer, String> idToName = people
-                .stream()
-                .collect(groupingBy(Person::getId, Collectors.mapping(Person::getName, toNameCollector)));
-
-        System.out.println("idToName = " + idToName);
-        // Then
-        then(idToName)
-                .containsKeys(1, 2, 3)
-                .containsValues("Brandon", "Jessica", "Marry");
-    }
+public class ValueCollectorScenarios {
 
     @Test
     public void shouldGroupWithCustomGenericCollector(){
