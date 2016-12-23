@@ -23,7 +23,9 @@ final class ValueCollector<T, A, R> implements Collector<T, A, R> {
 
     @Override
     public BinaryOperator<A> combiner() {
-        return null;
+        return (accumulator1, accumulator2) -> {
+            throw new UnsupportedOperationException();
+        };
     }
 
     @Override
