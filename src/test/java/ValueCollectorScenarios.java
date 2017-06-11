@@ -75,4 +75,32 @@ public class ValueCollectorScenarios {
                 .containsKeys(1, 2)
                 .containsValues("Brandon", "Jessica");
     }
+
+    @Test
+    public void shouldGroupWithReduce(){
+        // Given
+        final List<Person> people = Lists.newArrayList(
+                new Person(1, "Brandon", 11),
+                new Person(2, "Jessica", 22),
+                new Person(3, "Marry", 33)
+        );
+
+        // When
+        Map<Integer, String> idToName = people
+                .stream()
+                .collect(groupingBy(Person::getId, Collectors.reducing("", Person::getName, (s, s2) -> s2)));
+
+        Map<Integer, Integer> idToAge = people
+                .stream()
+                .collect(groupingBy(Person::getId, Collectors.reducing(0, Person::getAge, (integer, integer2) -> integer2)));
+
+        // Then
+        then(idToName)
+                .containsKeys(1, 2, 3)
+                .containsValues("Brandon", "Jessica", "Marry");
+
+        then(idToAge)
+                .containsKeys(1, 2, 3)
+                .containsValues(11, 22, 33);
+    }
 }
