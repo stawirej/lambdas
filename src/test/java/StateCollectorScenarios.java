@@ -1,13 +1,14 @@
 import static org.assertj.core.api.BDDAssertions.then;
 
-import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
 
 public class StateCollectorScenarios {
 
     @Test
-    public void shouldGroupByValuesCount(){
+    public void shouldGroupByValuesCount() {
         // Given
         int idLimit = 4;
         List<CustomPair> input = new ArrayList<>();
@@ -21,6 +22,29 @@ public class StateCollectorScenarios {
         // When
         Grouper groupedPairs = input.stream().collect(Grouper::new, Grouper::accept, Grouper::andThen);
         List<List<CustomPair>> output = groupedPairs.get();
+
+        // Then
+        then(output.size()).isEqualTo(2);
+        then(output.get(0)).containsSequence(a, b).hasSize(2);
+        then(output.get(1)).containsSequence(c).hasSize(1);
+    }
+
+    @Test
+    public void shouldGroupByValuesCountWithCustomCollector() {
+        // Given
+        int idLimit = 4;
+        List<CustomPair> input = new ArrayList<>();
+        CustomPair a = CustomPair.create('a', 1, 2);
+        CustomPair b = CustomPair.create('b', 3, 4);
+        CustomPair c = CustomPair.create('c', 5, 6);
+        input.add(a);
+        input.add(b);
+        input.add(c);
+
+        // When
+
+
+        List<List<CustomPair>> output = input.stream().collect(new CustomGroupingStateCollector());
 
         // Then
         then(output.size()).isEqualTo(2);
