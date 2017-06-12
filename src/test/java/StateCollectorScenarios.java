@@ -24,9 +24,7 @@ public class StateCollectorScenarios {
 
         // Then
         then(output.size()).isEqualTo(2);
-        then(output.get(0).size()).isEqualTo(2);
-        then(output.get(0)).containsSequence(a, b);
-        then(output.get(1).size()).isEqualTo(1);
-        then(output.get(1)).containsSequence(c);
+        then(output.get(0)).containsSequence(a, b).hasSize(2);
+        then(output.get(1)).containsSequence(c).hasSize(1);
     }
 }
