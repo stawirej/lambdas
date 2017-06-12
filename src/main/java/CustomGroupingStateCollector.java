@@ -15,9 +15,9 @@ final class CustomGroupingStateCollector implements Collector<CustomPair, List<L
     private static final int limit = 4;
 
     public CustomGroupingStateCollector() {
-                    index = 0;
-                    currentVaulesSize = 0;
-                }
+        index = 0;
+        currentVaulesSize = 0;
+    }
 
     @Override
     public Supplier<List<List<CustomPair>>> supplier() {
@@ -30,16 +30,16 @@ final class CustomGroupingStateCollector implements Collector<CustomPair, List<L
 
     @Override
     public BiConsumer<List<List<CustomPair>>, CustomPair> accumulator() {
-       return (accumulator, customPair) -> {
-           if (currentVaulesSize >= limit){
-               accumulator.add(new ArrayList<>());
-               index++;
-               currentVaulesSize = 0;
-           }
+        return (accumulator, customPair) -> {
+            if (currentVaulesSize >= limit) {
+                accumulator.add(new ArrayList<>());
+                index++;
+                currentVaulesSize = 0;
+            }
 
-           currentVaulesSize += customPair.getValuesSize();
-           accumulator.get(index).add(customPair);
-       };
+            currentVaulesSize += customPair.getValuesSize();
+            accumulator.get(index).add(customPair);
+        };
     }
 
     @Override
