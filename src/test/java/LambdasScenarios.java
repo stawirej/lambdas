@@ -218,7 +218,7 @@ public class LambdasScenarios {
         // When
         int weight = fruits
                 .stream()
-                .map(fruit -> fruit.getWeight())
+                .map(Fruit::getWeight)
                 .reduce(0, (accumulator, element) -> accumulator + element);
 
         // Then
