@@ -1,0 +1,4 @@
+interface Fruit {
+
+    int getWeight();
+}

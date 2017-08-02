@@ -208,6 +208,24 @@ public class LambdasScenarios {
     }
 
     @Test
+    public void shouldCalculateFruitsWeight(){
+        // Given
+        List<Fruit> fruits = new ArrayList<>();
+        fruits.add(new Apple());
+        fruits.add(new Banana());
+        fruits.add(new Banana());
+
+        // When
+        int weight = fruits
+                .stream()
+                .map(fruit -> fruit.getWeight())
+                .reduce(0, (accumulator, element) -> accumulator + element);
+
+        // Then
+        then(weight).isEqualTo(440);
+    }
+
+    @Test
     public void shouldUseStreamsToGetTableElementsSum() {
         // Given
         final int[] table = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
