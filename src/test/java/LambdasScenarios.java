@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -491,6 +492,33 @@ public class LambdasScenarios {
         then(result)
                 .hasSize(expected.size())
                 .containsAll(expected);
+    }
+
+    @Test
+    public void shouldGroupByChunks(){
+        // Given
+        LocalDate startDay = LocalDate.parse("2018-03-01");
+        int daysCount = 5;
+        int daysInPartition = 2;
+
+        // When
+        List<List<String>> groupedDays = Stream.iterate(startDay, date -> date.plusDays(1))
+                .limit(daysCount)
+                .map(LocalDate::toString)
+                .collect(Collectors.collectingAndThen(toList(), dates -> Lists.partition(dates, daysInPartition)));
+
+        // Then
+        List<String> group1 = new ArrayList<>();
+        List<String> group2 = new ArrayList<>();
+        List<String> group3 = new ArrayList<>();
+        group1.add("2018-03-01");
+        group1.add("2018-03-02");
+        group2.add("2018-03-03");
+        group2.add("2018-03-04");
+        group3.add("2018-03-05");
+
+        then(groupedDays).containsExactly(group1, group2, group3);
+        System.out.println("groupedDays = " + groupedDays);
     }
 
     @Test
