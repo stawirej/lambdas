@@ -457,6 +457,32 @@ public class LambdasScenarios {
     }
 
     @Test
+    public void shouldCollectToSingleCollection(){
+        // Given
+        List<List<String>> alphabet = new ArrayList<>();
+        List<String> vowels = new ArrayList<>();
+        List<String> consonants = new ArrayList<>();
+        vowels.add("a");
+        vowels.add("e");
+        vowels.add("i");
+        vowels.add("o");
+        vowels.add("u");
+        consonants.add("b");
+        consonants.add("c");
+        consonants.add("d");
+        alphabet.add(vowels);
+        alphabet.add(consonants);
+
+        // When
+        List<String> collect = alphabet.stream()
+                .flatMap(Collection::stream)
+                .collect(toList());
+
+        // Then
+        System.out.println("collect = " + collect);
+    }
+
+    @Test
     public void shouldSelectIdsBaseOnFirstValueCountAndSecondValueDifference(){
         //Given
         List<Pair<Integer, Integer>> pairs = Lists.newArrayList(
