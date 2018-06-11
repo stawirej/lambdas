@@ -1,8 +1,4 @@
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.awt.event.ActionListener;
@@ -604,6 +600,26 @@ public class LambdasScenarios {
     public void shouldPeek() {
         // When
         IntStream.range(1, 15).peek(System.out::println).limit(5).count();
+    }
+
+    @Test
+    public void shouldIterateInnerStream(){
+        // Given
+        Person peter = new Person(1, "Piotrek", 20);
+        Person aga = new Person(2, "Aga", 21);
+        Person john = new Person(1, "John", 22, Lists.newArrayList(peter, aga));
+
+        List<Person> people = Lists.newArrayList(john);
+
+        // When
+        String collect = people
+                .stream()
+                .map(person -> person.getName() + person.friends().stream()
+                        .map(friend -> friend.getName() + " " + friend.getId()).collect(joining(":", "<", ">")))
+                .collect(joining("#"));
+
+        // Then
+        System.out.println("collect = " + collect);
     }
 
     @Test
