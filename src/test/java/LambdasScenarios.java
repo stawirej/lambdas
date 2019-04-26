@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import com.google.common.collect.Sets;
+import com.sun.org.glassfish.gmbal.Description;
 import javafx.util.Pair;
 import org.junit.Test;
 
@@ -600,6 +602,29 @@ public class LambdasScenarios {
     public void shouldPeek() {
         // When
         IntStream.range(1, 15).peek(System.out::println).limit(5).count();
+    }
+
+    @Test
+    @Description("Codility DecReprSenior")
+    public void codilityDecReprSenior(){
+        // Given
+        int N = 213;
+
+        // When
+        Integer integer = Integer.
+                toString(N)
+                .chars()
+                .map(c -> c - '0')
+                .boxed()
+                .sorted(Collections.reverseOrder())
+                .map(Object::toString)
+                .reduce((accumulator, element) -> accumulator += element)
+                .map(Integer::parseInt)
+                .get();
+
+
+        // Then
+        System.out.println("integer = " + integer);
     }
 
     @Test
