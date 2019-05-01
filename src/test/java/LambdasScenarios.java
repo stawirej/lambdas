@@ -21,8 +21,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import com.google.common.collect.Sets;
-import com.sun.org.glassfish.gmbal.Description;
-import javafx.util.Pair;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -483,22 +481,22 @@ public class LambdasScenarios {
     @Test
     public void shouldSelectIdsBaseOnFirstValueCountAndSecondValueDifference(){
         //Given
-        List<Pair<Integer, Integer>> pairs = Lists.newArrayList(
-                new Pair<>(1, 11),
-                new Pair<>(1, 12),
-                new Pair<>(1, 13),
-                new Pair<>(2, 21),
-                new Pair<>(2, 22),
-                new Pair<>(3, 31),
-                new Pair<>(3, 31),
-                new Pair<>(4, 41),
-                new Pair<>(4, 42)
+        List<Pair> pairs = Lists.newArrayList(
+                new Pair(1, 11),
+                new Pair(1, 12),
+                new Pair(1, 13),
+                new Pair(2, 21),
+                new Pair(2, 22),
+                new Pair(3, 31),
+                new Pair(3, 31),
+                new Pair(4, 41),
+                new Pair(4, 42)
         );
 
         Set<Integer> expected = Sets.newHashSet(2, 4);
 
         //When
-        Map<Integer, List<Pair<Integer, Integer>>> grouped = pairs
+        Map<Integer, List<Pair>> grouped = pairs
                 .stream()
                 .collect(groupingBy(Pair::getKey));
 
@@ -605,7 +603,7 @@ public class LambdasScenarios {
     }
 
     @Test
-    @Description("Codility DecReprSenior")
+//    @Description("Codility DecReprSenior")
     public void codilityDecReprSenior(){
         // Given
         int N = 213;
@@ -711,11 +709,11 @@ public class LambdasScenarios {
     }
 
 
-    private boolean has2Keys(final Map.Entry<Integer, List<Pair<Integer, Integer>>> entry) {
+    private boolean has2Keys(final Map.Entry<Integer, List<Pair>> entry) {
         return entry.getValue().size() == 2;
     }
 
-    private boolean hasDifferentValues(final List<Pair<Integer, Integer>> pairs) {
+    private boolean hasDifferentValues(final List<Pair> pairs) {
         return  !pairs.get(0).getValue().equals(pairs.get(1).getValue());
     }
 }
