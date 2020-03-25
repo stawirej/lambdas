@@ -1,5 +1,6 @@
-import static java.util.stream.Collectors.*;
-import static org.assertj.core.api.BDDAssertions.then;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.junit.Test;
 
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -7,12 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.stream.Collectors;
@@ -20,19 +23,19 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.google.common.collect.Sets;
-import org.junit.Test;
-
-import com.google.common.collect.Lists;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class LambdasScenarios {
 
-    private static boolean isEven(final int number) {
-        return number % 2 == 0;
-    }
-
     @Test
     public void shouldShowLambdasExpressionsForms() {
+
         final Runnable runnable = () -> System.out.println("Hello TTDay");
         runnable.run();
 
@@ -83,7 +86,7 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldCreateStreamFromIterable(){
+    public void shouldCreateStreamFromIterable() {
         //Given
         Iterable<String> names = Lists.newArrayList("Ala", "Ola", "Piotr", "Dominik");
 
@@ -154,7 +157,7 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldCollectToMap(){
+    public void shouldCollectToMap() {
         //Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
                 new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"), new Album("Vader", "Tibi Et Igni"));
@@ -172,7 +175,7 @@ public class LambdasScenarios {
     @Test
     public void shouldCalculateTableElementsSumUsingReduce() {
         // Given
-        final int[] table = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        final int[] table = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         // When
         final int sum = Arrays.stream(table).reduce(0, (accumulator, element) -> accumulator + element);
@@ -205,7 +208,7 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldCalculateFruitsWeight(){
+    public void shouldCalculateFruitsWeight() {
         // Given
         List<Fruit> fruits = new ArrayList<>();
         fruits.add(new Apple());
@@ -225,7 +228,7 @@ public class LambdasScenarios {
     @Test
     public void shouldUseStreamsToGetTableElementsSum() {
         // Given
-        final int[] table = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        final int[] table = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         // When
         final int sum = IntStream.of(table).sum();
@@ -238,7 +241,7 @@ public class LambdasScenarios {
     public void shouldUseSpecializedStream() {
         // Given
         final Set<Integer> collected =
-            IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter(x -> x > 5).boxed().collect(Collectors.toSet());
+                IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter(x -> x > 5).boxed().collect(Collectors.toSet());
     }
 
     @Test
@@ -341,7 +344,7 @@ public class LambdasScenarios {
     public void shouldGroup() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
         final Map<String, List<Album>> albumsByMusicians = albums.stream().collect(groupingBy(album -> album.getMusician()));
@@ -355,7 +358,7 @@ public class LambdasScenarios {
     public void shouldConcatenateString() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         final StringBuilder builder = new StringBuilder("[");
         // When
@@ -376,11 +379,11 @@ public class LambdasScenarios {
     public void shouldGroupString() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
         final String musicians =
-            albums.stream().map(album -> album.getMusician()).distinct().collect(Collectors.joining(",", "[", "]"));
+                albums.stream().map(album -> album.getMusician()).distinct().collect(Collectors.joining(",", "[", "]"));
 
         // Then
         System.out.println("musicians = " + musicians);
@@ -390,11 +393,11 @@ public class LambdasScenarios {
     public void shouldComposeCollectors() {
         // Given
         final List<Album> albums = Lists.newArrayList(new Album("Vader", "De Profundis"), new Album("Hunter", "Kingdom"),
-            new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
+                new Album("Michael Jackson", "Dangerous"), new Album("Vader", "Sothis"));
 
         // When
         final Map<String, List<String>> albumsByMusician = albums.stream()
-            .collect(groupingBy(album -> album.getMusician(), Collectors.mapping(album -> album.getTitle(), toList())));
+                .collect(groupingBy(album -> album.getMusician(), Collectors.mapping(album -> album.getTitle(), toList())));
 
         // Then
         System.out.println("albumsByMusician = " + albumsByMusician);
@@ -421,7 +424,7 @@ public class LambdasScenarios {
     public void shouldParrallelDataDifferentImplementations() {
         // Given
         final List<Integer> numbers =
-            IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(ArrayList::new));
+                IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(ArrayList::new));
 
         // final TreeSet<Integer> numbers =
         // IntStream.rangeClosed(0, 10_000_000).boxed().collect(Collectors.toCollection(TreeSet::new));
@@ -442,18 +445,18 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldFlatRecursiveStreams(){
+    public void shouldFlatRecursiveStreams() {
         //Given
-//        http://www.nurkiewicz.com/2014/07/turning-recursive-file-system-traversal.html#!/2014/07/turning-recursive-file-system-traversal.html
+        //        http://www.nurkiewicz.com/2014/07/turning-recursive-file-system-traversal.html#!/2014/07/turning-recursive-file-system-traversal.html
 
         //When
-//        return Stream.concat(Stream.of(this), this.getSubActions().stream().flatMap(CascadedActionInfo::flattened));
+        //        return Stream.concat(Stream.of(this), this.getSubActions().stream().flatMap(CascadedActionInfo::flattened));
 
         //Then
     }
 
     @Test
-    public void shouldCollectToSingleCollection(){
+    public void shouldCollectToSingleCollection() {
         // Given
         List<List<String>> alphabet = new ArrayList<>();
         List<String> vowels = new ArrayList<>();
@@ -479,7 +482,7 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldSelectIdsBaseOnFirstValueCountAndSecondValueDifference(){
+    public void shouldSelectIdsBaseOnFirstValueCountAndSecondValueDifference() {
         //Given
         List<Pair> pairs = Lists.newArrayList(
                 new Pair(1, 11),
@@ -517,7 +520,7 @@ public class LambdasScenarios {
     }
 
     @Test
-    public void shouldGroupByChunks(){
+    public void shouldGroupByChunks() {
         // Given
         LocalDate startDay = LocalDate.parse("2018-03-01");
         int daysCount = 5;
@@ -560,18 +563,18 @@ public class LambdasScenarios {
     public void shouldFilterOneCollectionBasedOnSecondCollectionByCheckingOneAttribute() {
         // Given
         final Collection<Association> associations =
-            Lists.newArrayList(new Association("A"), new Association("B"), new Association("C"), new Association("D"));
+                Lists.newArrayList(new Association("A"), new Association("B"), new Association("C"), new Association("D"));
 
         final Collection<Association> associationsToFilter =
-            Lists.newArrayList(new Association("A"), new Association("B"), new Association("X"), new Association("Y"));
+                Lists.newArrayList(new Association("A"), new Association("B"), new Association("X"), new Association("Y"));
 
         // When
         final List<String> typesToFilter = associationsToFilter.parallelStream().map(Association::getType).collect(toList());
 
         final List<Association> filteredAssociations = //
-            associations.parallelStream() //
-                .filter(a -> typesToFilter.contains(a.getType())) //
-                .collect(toList());
+                associations.parallelStream() //
+                        .filter(a -> typesToFilter.contains(a.getType())) //
+                        .collect(toList());
 
         // Then
         then(filteredAssociations).containsExactly(new Association("A"), new Association("B"));
@@ -584,13 +587,13 @@ public class LambdasScenarios {
 
         // When
         final List<Integer> sequence = //
-            Stream //
-                .iterate(1, i -> i + 1) //
-                .filter(this::notDivisibleBy3) //
-                .filter(this::notDivisibleBy5) //
-                .filter(this::notContainingDigit3) //
-                .limit(N) //
-                .collect(Collectors.toList());
+                Stream //
+                        .iterate(1, i -> i + 1) //
+                        .filter(this::notDivisibleBy3) //
+                        .filter(this::notDivisibleBy5) //
+                        .filter(this::notContainingDigit3) //
+                        .limit(N) //
+                        .collect(Collectors.toList());
 
         // Then
         then(sequence).containsSequence(1, 2, 4, 7, 8, 11, 14, 16, 17, 19, 22, 26, 28, 29, 41, 44);
@@ -603,8 +606,8 @@ public class LambdasScenarios {
     }
 
     @Test
-//    @Description("Codility DecReprSenior")
-    public void codilityDecReprSenior(){
+    //    @Description("Codility DecReprSenior")
+    public void codilityDecReprSenior() {
         // Given
         int N = 213;
 
@@ -620,13 +623,12 @@ public class LambdasScenarios {
                 .map(Integer::parseInt)
                 .get();
 
-
         // Then
         System.out.println("integer = " + integer);
     }
 
     @Test
-    public void shouldIterateInnerStream(){
+    public void shouldIterateInnerStream() {
         // Given
         Person peter = new Person(1, "Piotrek", 20);
         Person aga = new Person(2, "Aga", 21);
@@ -643,6 +645,44 @@ public class LambdasScenarios {
 
         // Then
         System.out.println("collect = " + collect);
+    }
+
+    @Test
+    public void mergeMaps() {
+        // Given
+        Map<Integer, Person> map1 = new HashMap<>();
+        map1.put(1, new Person(1, "John", 22));
+        map1.put(2, new Person(2, "Alice", 33));
+
+        Map<Integer, Person> map2 = new HashMap<>();
+        map2.put(2, new Person(2, "Alice2", 333));
+        map2.put(3, new Person(3, "Kate", 44));
+
+        Map<Integer, Person> expectedMap = new HashMap<>();
+        expectedMap.put(1, new Person(1, "John", 22));
+        expectedMap.put(2, new Person(2, "Alice+Alice2", 366));
+        expectedMap.put(3, new Person(3, "Kate", 44));
+
+        Map<Integer, Person> merged = new HashMap<>();
+
+        // When
+
+        BiFunction<Person, Person, Person> noRemapping = (oldPerson, newPerson) -> oldPerson;
+        map1
+                .values()
+                .forEach(person -> merged.merge(person.getId(), person, (oldPerson, newPerson) -> oldPerson)); //remapping function only executed when value is already present
+
+        map2
+                .values()
+                .forEach(person -> merged.merge(person.getId(), person, (oldPerson, newPerson) -> {
+                    System.out.println("oldPerson = " + oldPerson);
+                    System.out.println("newPerson = " + newPerson);
+                    Person mergedPerson = new Person(oldPerson.getId(), oldPerson.getName() + "+" + newPerson.getName(), oldPerson.getAge() + newPerson.getAge());
+                    return mergedPerson;
+                }));
+
+        // Then
+        then(merged).isEqualTo(expectedMap);
     }
 
     @Test
@@ -688,7 +728,13 @@ public class LambdasScenarios {
         // System.out.println("collect = " + collect);
     }
 
+    private static boolean isEven(final int number) {
+
+        return number % 2 == 0;
+    }
+
     private List<Association> createAssociations(final long count) {
+
         final List<Association> associations = Lists.newArrayList();
         for (int i = 0; i < count; i++) {
             associations.add(new Association(Integer.toString(i + 1)));
@@ -697,23 +743,27 @@ public class LambdasScenarios {
     }
 
     private boolean notDivisibleBy3(final Integer value) {
+
         return value % 3 != 0;
     }
 
     private boolean notDivisibleBy5(final Integer value) {
+
         return value % 5 != 0;
     }
 
     private boolean notContainingDigit3(final Integer value) {
+
         return !String.valueOf(value).contains("3");
     }
 
-
     private boolean has2Keys(final Map.Entry<Integer, List<Pair>> entry) {
+
         return entry.getValue().size() == 2;
     }
 
     private boolean hasDifferentValues(final List<Pair> pairs) {
-        return  !pairs.get(0).getValue().equals(pairs.get(1).getValue());
+
+        return !pairs.get(0).getValue().equals(pairs.get(1).getValue());
     }
 }

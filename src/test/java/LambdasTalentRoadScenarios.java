@@ -12,11 +12,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 
+@Ignore
 public class LambdasTalentRoadScenarios {
 
     private static boolean isEven(final int number) {
