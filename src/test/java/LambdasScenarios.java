@@ -600,6 +600,14 @@ public class LambdasScenarios {
     }
 
     @Test
+    public void generateIntervals(){
+        Stream
+                .iterate(1, i -> i + 3)
+                .peek(integer -> System.out.println("integer = " + integer))
+                .anyMatch(i -> i >= 10);
+    }
+
+    @Test
     public void shouldPeek() {
         // When
         IntStream.range(1, 15).peek(System.out::println).limit(5).count();
