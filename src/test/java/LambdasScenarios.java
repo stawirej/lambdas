@@ -1,6 +1,7 @@
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
 
 public class LambdasScenarios {
@@ -184,14 +186,16 @@ public class LambdasScenarios {
         then(sum).isEqualTo(55);
     }
 
-    @Test(expected = NullPointerException.class)
     public void shouldFailWhenConcatenateStringWithReduceWithNullAccumulator() {
         // Given
         final String message = null;
         final List<String> words = Arrays.asList("Ala", " ma", " kota.");
 
         // When
-        final String sentence = words.stream().reduce(message, String::concat);
+        Throwable throwable = catchThrowable(() -> words.stream().reduce(message, String::concat));
+
+        // Then
+        then(throwable).isInstanceOf(NullPointerException.class);
     }
 
     @Test

@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.Test;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
+import org.junit.jupiter.api.Test;
 
 public class LambdasTalentRoadSolvedScenarios {
 

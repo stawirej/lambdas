@@ -13,9 +13,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
 
 import com.google.common.collect.Lists;
+import org.junit.jupiter.api.Test;
 
 public class SpecializedCollectorScenarios {
 

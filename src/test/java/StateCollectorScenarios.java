@@ -1,9 +1,9 @@
 import static org.assertj.core.api.BDDAssertions.then;
 
+import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
 
 public class StateCollectorScenarios {
 
