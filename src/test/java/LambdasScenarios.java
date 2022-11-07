@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IntSummaryStatistics;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
@@ -738,6 +740,29 @@ public class LambdasScenarios {
 
         // Then
         // System.out.println("collect = " + collect);
+    }
+
+    @Test
+    void shouldConvertToMapAndKeepsTheOrder(){
+        // Given
+        List<Person> people = Lists.newArrayList(
+                new Person(1, "John", 22),
+                new Person(2, "Alice", 33),
+                new Person(3, "Kate", 44)
+        );
+
+        // When
+
+        LinkedHashMap<Integer, Person> peopleById = people
+            .stream()
+            .collect(toMap(Person::getId, identity(), (a, b) -> a, LinkedHashMap::new));
+
+        // Then
+        then(peopleById.values()).containsExactly(
+                new Person(1, "John", 22),
+                new Person(2, "Alice", 33),
+                new Person(3, "Kate", 44)
+        );
     }
 
     private static boolean isEven(final int number) {
